@@ -1,0 +1,16 @@
+---
+BasedOnStyle: Google
+DerivePointerAlignment: false
+IndentWidth: 4
+TabWidth: 4
+UseTab: Never
+BreakBeforeBraces: Attach
+AllowShortFunctionsOnASingleLine: Empty
+ColumnLimit: 100
+ContinuationIndentWidth: 4
+IndentCaseLabels: true
+SpaceBeforeParens: ControlStatements
+SpacesInParentheses: false
+SpacesInConditionalStatement: false
+ReflowComments: true
+...
