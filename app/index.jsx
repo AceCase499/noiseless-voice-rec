@@ -9,6 +9,7 @@ export default function App() {
   const [recording, setRecording] = useState(null);
   const [originalUri, setOriginalUri] = useState(null);
   const [processedUri, setProcessedUri] = useState(null);
+  const [status, setStatus] = useState("");
 
   const startRecording = async () => {
     try {
@@ -42,25 +43,31 @@ export default function App() {
       type: 'audio/wav',
     });
 
-    try {
-      const response = await axios({
-        method: 'POST',
-        url: 'http://192.168.1.72:8080/',
-        data: formData,
-        headers: { 'Content-Type': 'multipart/form-data' },
-        responseType: 'arraybuffer', // correct for binary data!
-      });
+    fetch("/", {
+        method: "POST",
+        body: formData,
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "completed") {
+            const fileType = data.file_type
+            const mediaUrl = data.media_url;
 
-      const processedPath = FileSystem.cacheDirectory + 'processed.wav';
-      await FileSystem.writeAsStringAsync(
-        processedPath,
-        Buffer.from(response.data).toString('base64'),
-        { encoding: FileSystem.EncodingType.Base64 }
-      );
-      setProcessedUri(processedPath);
-    } catch (error) {
-      console.error('Upload failed', error);
-    }
+            setProcessedUri(mediaUrl);
+            //status.textContent = "";
+            //processButton.textContent = "Completed!";
+            
+            setTimeout(() => {
+                //processButton.textContent = "Process Media";
+            }, 3000);
+        } else {
+            //status.textContent = data.message || "An error occurred!";
+        }
+    })
+    .catch((error) => {
+        console.error("Error while connecting to the server:", error);
+        //status.textContent = "An error occurred while connecting to the server.";
+    });
   };
 
   return (
